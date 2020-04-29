@@ -1,30 +1,42 @@
-export class FullscreenCanvas {
+export class Canvas {
   constructor ({
     canvas = document.createElement('canvas')
   } = {}) {
     this.canvas = canvas
     this.context = canvas.getContext('2d')
-    canvas.classList.add('fullscreen-canvas')
+    canvas.classList.add('canvas')
+
+    this.width = 0
+    this.height = 0
   }
 
-  addTo (parent) {
-    parent.appendChild(this.canvas)
+  setWrapper (wrapper = null) {
+    if (this.wrapper) {
+      wrapper.removeChild(this.canvas)
+      wrapper.classList.remove('canvas-wrapper')
+    }
+    if (wrapper) {
+      wrapper.appendChild(this.canvas)
+      wrapper.classList.add('canvas-wrapper')
+    }
+    this.wrapper = wrapper
     return this
   }
 
   async resize (measurementsDone = Promise.resolve()) {
-    const width = window.innerWidth
-    const height = window.innerHeight
-    const dpr = window.devicePixelRatio
+    if (this.wrapper) {
+      const { width, height } = this.wrapper.getBoundingClientRect()
+      const dpr = window.devicePixelRatio
 
-    await measurementsDone
+      await measurementsDone
 
-    this.canvas.width = width
-    this.canvas.height = height
-    this.context.scale(dpr, dpr)
+      this.canvas.width = width
+      this.canvas.height = height
+      this.context.scale(dpr, dpr)
 
-    this.width = width
-    this.height = height
+      this.width = width
+      this.height = height
+    }
 
     return this
   }

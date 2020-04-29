@@ -7,6 +7,7 @@ export class PointerControls {
   } = {}) {
     this.controlling = controlling
     this.element = element
+    this.element.classList.add('pointer-controls')
 
     this.scrollInfo = null
   }

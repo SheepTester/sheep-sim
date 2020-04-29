@@ -7,19 +7,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" type="text/css" href="/sheep3.css">
     <link rel="stylesheet" href="../src/css/common.css">
-    <link rel="stylesheet" href="../src/css/fullscreen-canvas.css">
+    <link rel="stylesheet" href="../src/css/pointer-controls.css">
+    <link rel="stylesheet" href="../src/css/canvas.css">
     <script src="/sheep3.js" charset="utf-8"></script>
+    <style media="screen">
+      #canvas-wrapper {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
   </head>
   <body>
+    <div id="canvas-wrapper"></div>
     <script type="module">
-      import { FullscreenCanvas } from '../src/view/fullscreen-canvas.mjs'
+      import { Canvas } from '../src/view/fullscreen-canvas.mjs'
       import { Grid } from '../src/view/grid.mjs'
       import { PointerControls } from '../src/view/pointer-controls.mjs'
       import { WindowResizeListener } from '../src/view/window-resize-listener.mjs'
       import { Animator } from '../src/view/animator.mjs'
 
-      const canvas = new FullscreenCanvas()
-        .addTo(document.body)
+      const canvas = new Canvas()
+        .setWrapper(document.getElementById('canvas-wrapper'))
 
       const grid = new Grid({ canvas })
 
