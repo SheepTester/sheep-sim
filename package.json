@@ -1,0 +1,19 @@
+{
+  "name": "sheep-sim",
+  "version": "1.0.0",
+  "description": "Infection simulator because it's trendy",
+  "main": "src/index.mjs",
+  "scripts": {
+    "test": "standard --verbose | snazzy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SheepTester/sheep-sim.git"
+  },
+  "author": "SheepTester",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SheepTester/sheep-sim/issues"
+  },
+  "homepage": "https://github.com/SheepTester/sheep-sim#readme"
+}
