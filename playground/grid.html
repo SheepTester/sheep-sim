@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Grid</title>
+    <meta name="description" content="Grid."/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="/sheep3.css">
+    <link rel="stylesheet" href="../src/css/common.css">
+    <link rel="stylesheet" href="../src/css/fullscreen-canvas.css">
+    <script src="/sheep3.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <script type="module">
+      import { FullscreenCanvas } from '../src/view/fullscreen-canvas.mjs'
+      import { Grid } from '../src/view/grid.mjs'
+      import { PointerControls } from '../src/view/pointer-controls.mjs'
+      import { WindowResizeListener } from '../src/view/window-resize-listener.mjs'
+      import { Animator } from '../src/view/animator.mjs'
+
+      const canvas = new FullscreenCanvas()
+        .addTo(document.body)
+
+      const grid = new Grid({ canvas })
+
+      const animator = new Animator({ renderers: [grid] })
+
+      const controls = new PointerControls({ controlling: grid, element: canvas.canvas })
+        .listen()
+
+      const resizeListener = new WindowResizeListener({ resizers: [canvas] })
+        .listen()
+        .resizeNow()
+        .then(() => {
+          animator.start()
+        })
+    </script>
+  </body>
+</html>
