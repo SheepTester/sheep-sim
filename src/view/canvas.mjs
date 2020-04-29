@@ -30,8 +30,8 @@ export class Canvas {
 
       await measurementsDone
 
-      this.canvas.width = width
-      this.canvas.height = height
+      this.canvas.width = width * dpr
+      this.canvas.height = height * dpr
       this.context.scale(dpr, dpr)
 
       this.width = width
