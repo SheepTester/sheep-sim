@@ -44,6 +44,7 @@
       import { Animator } from '../src/view/animator.mjs'
       import { Sheep } from '../src/simulation/sheep.mjs'
       import { Vector2 } from '../src/utils/vector2.mjs'
+      import { Simulator } from '../src/view/simulator.mjs'
 
       const canvas = new Canvas()
         .setWrapper(document.getElementById('canvas-wrapper'))
@@ -52,9 +53,10 @@
 
       const sheep = new Sheep()
       grid.addSheep(sheep)
-      sheep.setGoal(new Vector2(10, 10))
+      console.log(sheep);
 
-      const animator = new Animator({ renderers: [grid] })
+      const simulator = new Simulator({ simulations: [sheep], simulateTime: 0.01 })
+      const animator = new Animator({ renderers: [simulator, grid] })
 
       const controls = new PointerControls({ controlling: grid, element: canvas.canvas })
         .listen()
@@ -63,7 +65,7 @@
         scroll: PointerControls.scroll,
         paint: PointerControls.paint,
         setGoal: {
-          start: e => {
+          start: (e, { controlling }) => {
             sheep.setGoal(controlling.getBlockPosition(e))
           }
         }

@@ -87,7 +87,7 @@ export class Grid {
     c.fillStyle = '#53a5c6'
     c.beginPath()
     for (const creature of this.creatures) {
-      const visualPos = creature.position.clone().sub(scroll).add(creatureOffset)
+      const visualPos = creature.position.clone().scale(GRID_SIZE).sub(scroll).add(creatureOffset)
       if (visualPos.compare({ min: lowerVisibleBound, max: upperVisibleBound })) {
         c.moveTo(...visualPos.clone().add({ x: CREATURE_RADIUS }))
         c.arc(...visualPos, CREATURE_RADIUS, 0, Math.PI * 2)

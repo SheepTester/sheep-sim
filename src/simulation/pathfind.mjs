@@ -71,7 +71,11 @@ export function pathfind (grid, start, ends) {
     }
   }
 
-  const endPositions = ends.map(getPosition)
+  const endPositions = ends
+    .filter(position => !grid.getBlock(position))
+    .map(getPosition)
+
+  if (endPositions.length === 0) return null
 
   return aStar(getPosition(start), {
     determineGoodness: position => {
