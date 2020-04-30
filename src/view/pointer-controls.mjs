@@ -28,6 +28,9 @@ export class PointerControls {
         pointerId: e.pointerId,
         state: this.mode.start ? this.mode.start(e, this) : {}
       }
+      if (this.mode.callMoveWithStart && this.mode.move) {
+        this.mode.move(e, this, this.scrollInfo.state)
+      }
       this.element.setPointerCapture(e.pointerId)
     }
   }
@@ -69,5 +72,6 @@ PointerControls.paint = {
     } else {
       controlling.removeBlock(position)
     }
-  }
+  },
+  callMoveWithStart: true
 }
