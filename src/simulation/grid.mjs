@@ -33,17 +33,27 @@ export class Grid {
   addSheep (sheep) {
     sheep.grid = this
     this.creatures.push(sheep)
+    return this
+  }
+
+  getBlockPosition (event) {
+    return Vector2.fromMouseEvent(event)
+      .sub(this.canvas.position)
+      .add(this.scroll)
+      .scale(1 / GRID_SIZE)
+      .map(Math.floor)
   }
 
   render () {
-    const { context: c, width, height } = this.canvas
+    const { context: c, size } = this.canvas
+    const { x: width, y: height } = size
     const scroll = this.scroll
 
     c.fillStyle = '#1d4f79'
-    c.fillRect(0, 0, width, height)
+    c.fillRect(0, 0, ...size)
 
     const start = scroll.clone().scale(1 / GRID_SIZE).map(Math.floor)
-    const end = new Vector2(width, height).add(scroll).scale(1 / GRID_SIZE).map(Math.ceil)
+    const end = scroll.clone().add(size).scale(1 / GRID_SIZE).map(Math.ceil)
     c.strokeStyle = 'rgba(255, 255, 255, 0.3)'
     c.lineDashOffset = 2.5
     c.setLineDash([5, 5])
@@ -71,16 +81,20 @@ export class Grid {
     }
 
     const creatureOffset = new Vector2(GRID_SIZE, GRID_SIZE).scale(1 / 2)
+    const creatureRadius = new Vector2(CREATURE_RADIUS, CREATURE_RADIUS)
+    const lowerVisibleBound = creatureRadius.clone().scale(-1)
+    const upperVisibleBound = creatureRadius.clone().add(size)
     c.fillStyle = '#53a5c6'
     c.beginPath()
     for (const creature of this.creatures) {
       const visualPos = creature.position.clone().sub(scroll).add(creatureOffset)
-      if (visualPos.x >= -CREATURE_RADIUS && visualPos.y >= -CREATURE_RADIUS &&
-        visualPos.x < width + CREATURE_RADIUS && visualPos.y < height + CREATURE_RADIUS) {
+      if (visualPos.compare({ min: lowerVisibleBound, max: upperVisibleBound })) {
         c.moveTo(...visualPos.clone().add({ x: CREATURE_RADIUS }))
         c.arc(...visualPos, CREATURE_RADIUS, 0, Math.PI * 2)
       }
     }
     c.fill()
+
+    return this
   }
 }

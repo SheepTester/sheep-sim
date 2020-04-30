@@ -52,6 +52,16 @@ export class Vector2 {
     return this.x === x && this.y === y
   }
 
+  compare ({ min, max }) {
+    if (min && (this.x < min.x || this.y < min.y)) {
+      return false
+    }
+    if (max && (this.x > max.x || this.y > max.y)) {
+      return false
+    }
+    return true
+  }
+
   map (fn) {
     this.x = fn(this.x)
     this.y = fn(this.y)

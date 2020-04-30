@@ -37,13 +37,21 @@
       grid.addSheep(sheep)
       sheep.setGoal(new Vector2(10, 10))
       for (const pos of sheep.path) {
-        grid.placeBlock(pos)
+        // grid.placeBlock(pos)
       }
 
       const animator = new Animator({ renderers: [grid] })
 
       const controls = new PointerControls({ controlling: grid, element: canvas.canvas })
         .listen()
+
+      document.addEventListener('keydown', e => {
+        if (e.key === ' ') {
+          controls.mode = controls.mode === PointerControls.paint
+            ? PointerControls.scroll
+            : PointerControls.paint
+        }
+      })
 
       const resizeListener = new WindowResizeListener({ resizers: [canvas] })
         .listen()
