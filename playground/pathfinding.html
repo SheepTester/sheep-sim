@@ -5,19 +5,36 @@
     <title>Pathfinding</title>
     <meta name="description" content="Pathfinding."/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/sheep3.css">
     <link rel="stylesheet" href="../src/css/common.css">
     <link rel="stylesheet" href="../src/css/pointer-controls.css">
     <link rel="stylesheet" href="../src/css/canvas.css">
+
     <script src="/sheep3.js" charset="utf-8"></script>
+
     <style media="screen">
+      body {
+        font-family: 'Manrope', sans-serif;
+        background-color: black;
+        color: white;
+      }
+      .options {
+        padding: 20px;
+      }
       #canvas-wrapper {
-        width: 100%;
-        height: 100%;
+        flex: auto;
       }
     </style>
   </head>
   <body>
+    <div class="options">
+      Change mode:
+      <button class="set-mode" data-mode="scroll">Pan</button>
+      <button class="set-mode" data-mode="paint">Place blocks</button>
+      <button class="set-mode" data-mode="setGoal">Move sheep</button>
+    </div>
     <div id="canvas-wrapper"></div>
     <script type="module">
       import { Canvas } from '../src/view/canvas.mjs'
@@ -36,20 +53,24 @@
       const sheep = new Sheep()
       grid.addSheep(sheep)
       sheep.setGoal(new Vector2(10, 10))
-      for (const pos of sheep.path) {
-        // grid.placeBlock(pos)
-      }
 
       const animator = new Animator({ renderers: [grid] })
 
       const controls = new PointerControls({ controlling: grid, element: canvas.canvas })
         .listen()
 
-      document.addEventListener('keydown', e => {
-        if (e.key === ' ') {
-          controls.mode = controls.mode === PointerControls.paint
-            ? PointerControls.scroll
-            : PointerControls.paint
+      const modes = {
+        scroll: PointerControls.scroll,
+        paint: PointerControls.paint,
+        setGoal: {
+          start: e => {
+            sheep.setGoal(controlling.getBlockPosition(e))
+          }
+        }
+      }
+      document.addEventListener('click', e => {
+        if (e.target.classList.contains('set-mode')) {
+          controls.mode = modes[e.target.dataset.mode]
         }
       })
 

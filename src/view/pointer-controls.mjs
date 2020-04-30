@@ -26,7 +26,7 @@ export class PointerControls {
     if (!this.scrollInfo) {
       this.scrollInfo = {
         pointerId: e.pointerId,
-        state: this.mode.start ? this.mode.start(this, e) : {}
+        state: this.mode.start ? this.mode.start(e, this) : {}
       }
       this.element.setPointerCapture(e.pointerId)
     }
@@ -34,14 +34,14 @@ export class PointerControls {
 
   _pointerMove (e) {
     if (this.scrollInfo && this.scrollInfo.pointerId === e.pointerId && this.mode.move) {
-      this.mode.move(this, e, this.scrollInfo.state)
+      this.mode.move(e, this, this.scrollInfo.state)
     }
   }
 
   _pointerEnd (e) {
     if (this.scrollInfo && this.scrollInfo.pointerId === e.pointerId) {
       if (this.mode.end) {
-        this.mode.end(this, e, this.scrollInfo.state)
+        this.mode.end(e, this, this.scrollInfo.state)
       }
       this.scrollInfo = null
     }
@@ -49,20 +49,20 @@ export class PointerControls {
 }
 
 PointerControls.scroll = {
-  start: ({ controlling }, e) => ({
+  start: (e, { controlling }) => ({
     start: Vector2.fromMouseEvent(e),
       oldScroll: controlling.scroll.clone()
   }),
-  move: ({ controlling }, e, { start, oldScroll }) => {
+  move: (e, { controlling }, { start, oldScroll }) => {
     controlling.scroll.set(start.clone().sub(Vector2.fromMouseEvent(e)).add(oldScroll))
   }
 }
 
 PointerControls.paint = {
-  start: ({ controlling }, e) => ({
+  start: (e, { controlling }) => ({
     placing: !controlling.getBlock(controlling.getBlockPosition(e))
   }),
-  move: ({ controlling }, e, { placing }) => {
+  move: (e, { controlling }, { placing }) => {
     const position = controlling.getBlockPosition(e)
     if (placing) {
       controlling.placeBlock(position)
