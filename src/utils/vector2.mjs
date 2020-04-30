@@ -67,6 +67,10 @@ export class Vector2 {
     yield this.y
   }
 
+  toString () {
+    return `<${x}, ${y}>`
+  }
+
   static fromMouseEvent ({ clientX, clientY }) {
     return new Vector2(clientX, clientY)
   }

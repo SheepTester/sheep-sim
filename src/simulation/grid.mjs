@@ -16,17 +16,17 @@ export class Grid {
     this.creatures = []
   }
 
-  getBlock ({ x, y }) {
-    return this.blocks.has(`${x},${y}`)
+  getBlock (position) {
+    return this.blocks.has(position.toString())
   }
 
   placeBlock ({ x, y }) {
-    this.blocks.add(`${x},${y}`)
+    this.blocks.add(position.toString())
     return this
   }
 
   removeBlock ({ x, y }) {
-    this.blocks.delete(`${x},${y}`)
+    this.blocks.delete(position.toString())
     return this
   }
 
