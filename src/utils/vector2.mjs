@@ -52,6 +52,12 @@ export class Vector2 {
     return this.x === x && this.y === y
   }
 
+  map (fn) {
+    this.x = fn(this.x)
+    this.y = fn(this.y)
+    return this
+  }
+
   clone () {
     return new Vector2(this.x, this.y)
   }
