@@ -6,7 +6,7 @@ import { Vector2 } from '../utils/vector2.mjs'
 //   is to the end.
 export function aStar (start, { determineGoodness, isEnd, getValidNeighbours }) {
   // Reachable positions that need to be investigated
-  const agenda = new Set(start)
+  const agenda = new Set([start])
 
   // "g score" - The distance to a position
   start._distance = 0
@@ -17,7 +17,7 @@ export function aStar (start, { determineGoodness, isEnd, getValidNeighbours }) 
 
   const cameFrom = new Map()
 
-  while (agenda.length) {
+  while (agenda.size) {
     // Get the position in agenda with lowest (best) goodness
     let current
     for (const position of agenda) {
@@ -64,7 +64,9 @@ export function pathfind (grid, start, ends) {
       return entry
     } else {
       const clone = position.clone()
-      position.set(position.toString(), clone)
+      clone._distance = Infinity
+      clone._goodness = Infinity
+      positions.set(position.toString(), clone)
       return clone
     }
   }
