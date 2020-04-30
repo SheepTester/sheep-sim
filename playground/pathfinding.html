@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Grid</title>
-    <meta name="description" content="Grid."/>
+    <title>Pathfinding</title>
+    <meta name="description" content="Pathfinding."/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" type="text/css" href="/sheep3.css">
     <link rel="stylesheet" href="../src/css/common.css">
@@ -30,16 +30,6 @@
         .setWrapper(document.getElementById('canvas-wrapper'))
 
       const grid = new Grid({ canvas })
-      grid.placeBlock({ x: 10, y: 10 })
-      grid.placeBlock({ x: 10, y: 11 })
-      grid.placeBlock({ x: 10, y: 12 })
-      grid.placeBlock({ x: 11, y: 11 })
-      grid.placeBlock({ x: 12, y: 10 })
-      grid.placeBlock({ x: 12, y: 11 })
-      grid.placeBlock({ x: 12, y: 12 })
-      grid.placeBlock({ x: 14, y: 10 })
-      grid.placeBlock({ x: 14, y: 11 })
-      grid.placeBlock({ x: 14, y: 12 })
 
       const animator = new Animator({ renderers: [grid] })
 
