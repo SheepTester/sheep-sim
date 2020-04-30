@@ -68,7 +68,7 @@ export class Vector2 {
   }
 
   toString () {
-    return `<${x}, ${y}>`
+    return `<${this.x}, ${this.y}>`
   }
 
   static fromMouseEvent ({ clientX, clientY }) {

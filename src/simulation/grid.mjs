@@ -20,14 +20,19 @@ export class Grid {
     return this.blocks.has(position.toString())
   }
 
-  placeBlock ({ x, y }) {
+  placeBlock (position) {
     this.blocks.add(position.toString())
     return this
   }
 
-  removeBlock ({ x, y }) {
+  removeBlock (position) {
     this.blocks.delete(position.toString())
     return this
+  }
+
+  addSheep (sheep) {
+    sheep.grid = this
+    this.creatures.push(sheep)
   }
 
   render () {
