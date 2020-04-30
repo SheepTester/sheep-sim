@@ -73,7 +73,16 @@ export function pathfind (grid, start, ends) {
 
   return aStar(getPosition(start), {
     determineGoodness: position => {
-
+      let endDistance = Infinity
+      // Using Manhattan distance
+      for (const end of ends) {
+        const { x, y } = position.clone().sub(end).map(Math.abs)
+        const distance = x + y
+        if (distance < endDistance) {
+          endDistance = distance
+        }
+      }
+      return endDistance
     },
     isEnd: position => endPositions.includes(position),
     getValidNeighbours: position =>
