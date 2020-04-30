@@ -25,11 +25,13 @@
       import { PointerControls } from '../src/view/pointer-controls.mjs'
       import { WindowResizeListener } from '../src/view/window-resize-listener.mjs'
       import { Animator } from '../src/view/animator.mjs'
+      import { Sheep } from '../src/simulation/sheep.mjs'
 
       const canvas = new Canvas()
         .setWrapper(document.getElementById('canvas-wrapper'))
 
       const grid = new Grid({ canvas })
+      grid.creatures.push(new Sheep())
 
       const animator = new Animator({ renderers: [grid] })
 
