@@ -54,7 +54,7 @@ export class PointerControls {
 PointerControls.scroll = {
   start: (e, { controlling }) => ({
     start: Vector2.fromMouseEvent(e),
-      oldScroll: controlling.scroll.clone()
+    oldScroll: controlling.scroll.clone()
   }),
   move: (e, { controlling }, { start, oldScroll }) => {
     controlling.scroll.set(start.clone().sub(Vector2.fromMouseEvent(e)).add(oldScroll))

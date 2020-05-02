@@ -53,7 +53,6 @@
 
       const sheep = new Sheep()
       grid.addSheep(sheep)
-      console.log(sheep);
 
       const simulator = new Simulator({ simulations: [sheep], simulateTime: 0.01 })
       const animator = new Animator({ renderers: [simulator, grid] })

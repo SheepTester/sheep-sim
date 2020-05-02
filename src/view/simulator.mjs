@@ -18,7 +18,7 @@ export class Simulator {
     const difference = (now - this._lastTime) / 1000
     this._lastTime = now
 
-    if (difference < this.maxDelay)  {
+    if (difference < this.maxDelay) {
       this._totalTime += difference
     }
 
