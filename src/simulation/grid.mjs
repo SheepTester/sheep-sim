@@ -71,15 +71,13 @@ export class Grid {
     }
     c.stroke()
 
-    c.fillStyle = '#212121'
     for (let x = start.x; x < end.x; x++) {
       for (let y = start.y; y < end.y; y++) {
         const position = new Vector2(x, y)
         const block = this.getBlock(position)
         if (block === 'wall') {
+          c.fillStyle = '#212121'
           c.fillRect(...position.scale(GRID_SIZE).sub(scroll), GRID_SIZE, GRID_SIZE)
-        } else if (block) {
-          c.fillRect(...position.add(new Vector2(0.25, 0.25)).scale(GRID_SIZE).sub(scroll), GRID_SIZE / 2, GRID_SIZE / 2)
         }
       }
     }

@@ -53,10 +53,6 @@ export function aStar (start, { determineGoodness, isEnd, getValidNeighbours }) 
     }
   }
 
-  if (agenda.size >= MAX_ATTEMPTS) {
-    console.warn(`Gave up pathfinding from ${start}`)
-  }
-
   // End was not reached
   return null
 }
@@ -85,11 +81,6 @@ export function pathfind ({ grid, start, ends, nonSolids = [] }) {
   const endPositions = ends
     .filter(isNonSolid)
     .map(getPosition)
-
-  if (endPositions.length === 0) {
-    console.warn('No valid end positions')
-    return null
-  }
 
   return aStar(getPosition(start), {
     determineGoodness: position => {

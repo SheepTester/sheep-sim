@@ -112,7 +112,6 @@ export class Sheep {
         this._currentBlock = this._nextBlock
         this._nextBlock = null
         if (this._currentBlock.equals(this.goal)) {
-          console.log('Goal reached')
           this.goal = null
         }
 
