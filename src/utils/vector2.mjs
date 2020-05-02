@@ -7,6 +7,10 @@ export class Vector2 {
     return Math.hypot(this.x, this.y)
   }
 
+  get lengthSquared () {
+    return this.x * this.x + this.y * this.y
+  }
+
   get angle () {
     return Math.atan2(this.y, this.x)
   }

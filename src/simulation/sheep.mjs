@@ -9,6 +9,7 @@ export class Sheep {
     this.position = position
     this._currentBlock = position.clone().map(Math.floor)
     this.speed = speed
+    this.infection = null
   }
 
   welcomeToGrid (grid) {
@@ -31,6 +32,21 @@ export class Sheep {
       shouldWander,
       _timeSinceLast: start ? Infinity : 0
     }
+  }
+
+  die () {
+    // :(
+    this.dead = true
+    if (this.grid.getBlock(this._currentBlock) === this) {
+      this.grid.removeBlock(this._currentBlock)
+    }
+    if (this._nextBlock && this.grid.getBlock(this._nextBlock) === this) {
+      this.grid.removeBlock(this._nextBlock)
+    }
+  }
+
+  getSheepWithin (distance) {
+    return this.grid.getSheep(this.position, distance)
   }
 
   _pathfind () {
@@ -95,6 +111,8 @@ export class Sheep {
   }
 
   simulate (time) {
+    if (this.dead) return
+
     this._setNextBlockIfNeeded()
     if (this._nextBlock) {
       this._nextBlockProgress += time * this.speed
@@ -142,6 +160,11 @@ export class Sheep {
         this.setGoal(wander(this), false)
       }
     }
+
+    if (this.infection) {
+      this.infection.simulate(time)
+    }
+
     return this
   }
 }

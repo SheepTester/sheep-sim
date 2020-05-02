@@ -44,6 +44,7 @@
       import { Sheep } from '../simulation/sheep.mjs'
       import { Vector2 } from '../utils/vector2.mjs'
       import { Simulator } from '../view/simulator.mjs'
+      import { SimpleInfection } from '../simulation/simple-infection.mjs'
 
       const canvas = new Canvas()
         .setWrapper(document.getElementById('canvas-wrapper'))
@@ -90,6 +91,9 @@
         sheep.wander(wanderer)
         sheepList.push(sheep)
       }
+
+      const infection = new SimpleInfection()
+        .infect(sheepList[0])
 
       const simulator = new Simulator({ simulations: sheepList, simulateTime: 0.01 })
       const animator = new Animator({ renderers: [simulator, grid] })
