@@ -63,8 +63,8 @@
       for (let i = 0; i < sheepCount; i++) {
         const sheep = new Sheep({
           position: new Vector2(0, i),
-          // speed: Math.random() * 5 + 1
-          speed: 5
+          speed: Math.random() * 3 + 3
+          // speed: 5
         })
         grid.addSheep(sheep)
         sheep.setGoal(new Vector2(10, goals[i]))

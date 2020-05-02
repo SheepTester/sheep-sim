@@ -75,7 +75,7 @@ export class Sheep {
               .map(offset => offset.add(this._currentBlock))
               .filter(this._canStepOnBlock.bind(this))
             if (neighbours.length) {
-              this._setNextBlock(neighbours[Math.random() * neighbours | 0])
+              this._setNextBlock(neighbours[Math.random() * neighbours.length | 0])
             } else {
               console.warn('Stuck :(')
             }
