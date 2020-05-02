@@ -12,7 +12,7 @@ export class Grid {
     this.canvas = canvas
 
     this.scroll = scroll
-    this.blocks = new Set()
+    this.blocks = new Map()
     this.creatures = []
   }
 
@@ -20,8 +20,8 @@ export class Grid {
     return this.blocks.has(position.toString())
   }
 
-  placeBlock (position) {
-    this.blocks.add(position.toString())
+  placeBlock (position, block = 'wall') {
+    this.blocks.set(position.toString(), block)
     return this
   }
 
