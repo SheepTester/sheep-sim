@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Pathfinding</title>
+    <meta name="description" content="Pathfinding."/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/sheep3.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/pointer-controls.css">
+    <link rel="stylesheet" href="../css/canvas.css">
+
+    <script src="/sheep3.js" charset="utf-8"></script>
+
+    <style media="screen">
+      body {
+        font-family: 'Manrope', sans-serif;
+        background-color: black;
+        color: white;
+      }
+      .options {
+        padding: 20px;
+      }
+      #canvas-wrapper {
+        flex: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="options">
+      Change mode:
+      <button class="set-mode" data-mode="scroll">Pan</button>
+      <button class="set-mode" data-mode="paint">Place blocks</button>
+    </div>
+    <div id="canvas-wrapper"></div>
+    <script type="module">
+      import { Canvas } from '../view/canvas.mjs'
+      import { Grid } from '../simulation/grid.mjs'
+      import { PointerControls } from '../view/pointer-controls.mjs'
+      import { WindowResizeListener } from '../view/window-resize-listener.mjs'
+      import { Animator } from '../view/animator.mjs'
+      import { Sheep } from '../simulation/sheep.mjs'
+      import { Vector2 } from '../utils/vector2.mjs'
+      import { Simulator } from '../view/simulator.mjs'
+
+      const canvas = new Canvas()
+        .setWrapper(document.getElementById('canvas-wrapper'))
+
+      const grid = new Grid({ canvas })
+
+      const sheepCount = 10
+      const goals = new Array(sheepCount)
+      for (let i = 9; i > 0; i--) {
+        const index = Math.floor(Math.random() * i)
+        const temp = goals[i] === undefined ? i : goals[i]
+        goals[i] = goals[index] === undefined ? index : goals[index]
+        goals[index] = temp
+      }
+      const sheepList = []
+      for (let i = 0; i < sheepCount; i++) {
+        const sheep = new Sheep({
+          position: new Vector2(0, i),
+          speed: Math.random() * 5 + 1
+        })
+        grid.addSheep(sheep)
+        sheep.setGoal(new Vector2(10, goals[i]))
+        sheepList.push(sheep)
+      }
+
+      const simulator = new Simulator({ simulations: sheepList, simulateTime: 0.01 })
+      const animator = new Animator({ renderers: [simulator, grid] })
+
+      const controls = new PointerControls({ controlling: grid, element: canvas.canvas })
+        .listen()
+
+      const modes = {
+        scroll: PointerControls.scroll,
+        paint: PointerControls.paint
+      }
+      document.addEventListener('click', e => {
+        if (e.target.classList.contains('set-mode')) {
+          controls.mode = modes[e.target.dataset.mode]
+        }
+      })
+
+      const resizeListener = new WindowResizeListener({ resizers: [canvas] })
+        .listen()
+        .resizeNow()
+        .then(() => {
+          animator.start()
+        })
+    </script>
+  </body>
+</html>
