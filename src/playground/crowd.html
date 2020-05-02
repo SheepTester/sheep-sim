@@ -54,20 +54,23 @@
       const goals = new Array(sheepCount)
       for (let i = 9; i > 0; i--) {
         const index = Math.floor(Math.random() * i)
-        const temp = goals[i] === undefined ? i : goals[i]
-        goals[i] = goals[index] === undefined ? index : goals[index]
-        goals[index] = temp
+        ;[goals[i], goals[index]] = [
+          goals[index] === undefined ? index : goals[index],
+          goals[i] === undefined ? i : goals[i]
+        ]
       }
       const sheepList = []
       for (let i = 0; i < sheepCount; i++) {
         const sheep = new Sheep({
           position: new Vector2(0, i),
-          speed: Math.random() * 5 + 1
+          // speed: Math.random() * 5 + 1
+          speed: 1
         })
         grid.addSheep(sheep)
         sheep.setGoal(new Vector2(10, goals[i]))
         sheepList.push(sheep)
       }
+      console.log(sheepList)
 
       const simulator = new Simulator({ simulations: sheepList, simulateTime: 0.01 })
       const animator = new Animator({ renderers: [simulator, grid] })

@@ -53,11 +53,20 @@ export function aStar (start, { determineGoodness, isEnd, getValidNeighbours }) 
     }
   }
 
+  if (agenda.size >= MAX_ATTEMPTS) {
+    console.warn(`Gave up pathfinding from ${start}`)
+  }
+
   // End was not reached
   return null
 }
 
-export function pathfind (grid, start, ends) {
+export function pathfind ({ grid, start, ends, nonSolids = [] }) {
+  function isNonSolid (position) {
+    const block = grid.getBlock(position)
+    return !block || nonSolids.includes(block)
+  }
+
   // Ensure that each position has the same Vector2 instance
   const positions = new Map()
   function getPosition (position) {
@@ -74,7 +83,7 @@ export function pathfind (grid, start, ends) {
   }
 
   const endPositions = ends
-    .filter(position => !grid.getBlock(position))
+    .filter(isNonSolid)
     .map(getPosition)
 
   if (endPositions.length === 0) return null
@@ -101,7 +110,7 @@ export function pathfind (grid, start, ends) {
         new Vector2(1, 0)
       ]
         .map(offset => offset.add(position))
-        .filter(neighbour => !grid.getBlock(neighbour))
+        .filter(isNonSolid)
         .map(getPosition)
   })
 }

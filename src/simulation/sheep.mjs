@@ -11,16 +11,42 @@ export class Sheep {
     this.speed = speed
   }
 
+  welcomeToGrid (grid) {
+    if (!grid.getBlock(this._currentBlock)) {
+      grid.placeBlock(this._currentBlock, this)
+    }
+  }
+
   setGoal (goal) {
     this.goal = goal
-    this.path = pathfind(this.grid, this._nextBlock || this.position, [goal])
+    this._pathfind()
+
+    return this
+  }
+
+  _pathfind () {
+    this.path = pathfind({
+      grid: this.grid,
+      start: this._nextBlock || this.position,
+      ends: [this.goal],
+      // It is ok for the sheep to go through cells that it currently occupies
+      nonsolids: [this]
+    })
+  }
+
+  _canStepOnBlock (position) {
+    const block = this.grid.getBlock(position)
+    return !block || block === this
   }
 
   _setNextBlockIfNeeded () {
     if (!this._nextBlock && this.path) {
-      if (this.path[0]) {
-        this._nextBlock = this.path.shift()
+      if (this.path[0] && this._canStepOnBlock(this.path[0])) {
+        // Sets next block
+        const nextBlock = this.path.shift()
+        this._nextBlock = nextBlock
         this._nextBlockProgress = 0
+        this.grid.placeBlock(nextBlock, this)
       } else {
         this.path = null
       }
@@ -35,16 +61,25 @@ export class Sheep {
         this._nextBlockProgress = 1
       }
       // If walking into a solid block, reverse and recalculate
-      if (this.grid.getBlock(this._nextBlock)) {
+      if (!this._canStepOnBlock(this._nextBlock)) {
         ;[this._currentBlock, this._nextBlock] = [this._nextBlock, this._currentBlock]
         this._nextBlockProgress = 1 - this._nextBlockProgress
-        this.path = pathfind(this.grid, this._nextBlock, [this.goal])
+        this._pathfind()
       }
       if (this._nextBlockProgress >= 1) {
         this.position.set(this._nextBlock)
         this._nextBlockProgress -= 1
+
+        // Removes next block
+        if (this.grid.getBlock(this._currentBlock) === this && !this._currentBlock.equals(this._nextBlock)) {
+          this.grid.removeBlock(this._currentBlock)
+        }
+        if (this.grid.getBlock(this._nextBlock) !== this) {
+          console.warn(`Conflict at ${this._nextBlock}`)
+        }
         this._currentBlock = this._nextBlock
         this._nextBlock = null
+
         this._setNextBlockIfNeeded()
       } else {
         this.position
@@ -55,5 +90,6 @@ export class Sheep {
             .scale(this._nextBlockProgress))
       }
     }
+    return this
   }
 }

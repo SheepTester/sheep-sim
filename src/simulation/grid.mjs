@@ -17,7 +17,7 @@ export class Grid {
   }
 
   getBlock (position) {
-    return this.blocks.has(position.toString())
+    return this.blocks.get(position.toString())
   }
 
   placeBlock (position, block = 'wall') {
@@ -33,6 +33,7 @@ export class Grid {
   addSheep (sheep) {
     sheep.grid = this
     this.creatures.push(sheep)
+    sheep.welcomeToGrid(this)
     return this
   }
 
@@ -73,9 +74,12 @@ export class Grid {
     c.fillStyle = '#212121'
     for (let x = start.x; x < end.x; x++) {
       for (let y = start.y; y < end.y; y++) {
-        const block = new Vector2(x, y)
-        if (this.getBlock(block)) {
-          c.fillRect(...block.scale(GRID_SIZE).sub(scroll), GRID_SIZE, GRID_SIZE)
+        const position = new Vector2(x, y)
+        const block = this.getBlock(position)
+        if (block === 'wall') {
+          c.fillRect(...position.scale(GRID_SIZE).sub(scroll), GRID_SIZE, GRID_SIZE)
+        } else if (block) {
+          c.fillRect(...position.add(new Vector2(0.25, 0.25)).scale(GRID_SIZE).sub(scroll), GRID_SIZE / 2, GRID_SIZE / 2)
         }
       }
     }
@@ -84,7 +88,7 @@ export class Grid {
     const creatureRadius = new Vector2(CREATURE_RADIUS, CREATURE_RADIUS)
     const lowerVisibleBound = creatureRadius.clone().scale(-1)
     const upperVisibleBound = creatureRadius.clone().add(size)
-    c.fillStyle = '#53a5c6'
+    c.fillStyle = 'rgba(83, 165, 198, 0.8)'
     c.beginPath()
     for (const creature of this.creatures) {
       const visualPos = creature.position.clone().scale(GRID_SIZE).sub(scroll).add(creatureOffset)
