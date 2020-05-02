@@ -17,8 +17,9 @@ export class Sheep {
     }
   }
 
-  setGoal (goal) {
+  setGoal (goal, important = true) {
     this.goal = goal
+    this.goalImportant = important
     this._pathfind()
 
     return this
@@ -49,36 +50,36 @@ export class Sheep {
 
   _setNextBlockIfNeeded () {
     if (!this._nextBlock) {
-      if (this.path && this.path[0]) {
-        if (this._canStepOnBlock(this.path[0])) {
-          this._setNextBlock(this.path.shift())
-        } else {
-          // Try to find a new path
-          this._pathfind()
-        }
+      if (this.path && this.path[0] && this._canStepOnBlock(this.path[0])) {
+        this._setNextBlock(this.path.shift())
       } else {
         if (this.path) {
           this.path = null
         }
         if (this.goal) {
-          // Try to find a new path
-          this._pathfind()
-          // If no path can be found
-          if (!this.path) {
-            // Freak out and move randomly
-            const neighbours = [
-              new Vector2(0, -1),
-              new Vector2(0, 1),
-              new Vector2(-1, 0),
-              new Vector2(1, 0)
-            ]
-              .map(offset => offset.add(this._currentBlock))
-              .filter(this._canStepOnBlock.bind(this))
-            if (neighbours.length) {
-              this._setNextBlock(neighbours[Math.random() * neighbours.length | 0])
-            } else {
-              console.warn('Stuck :(')
+          if (this.goalImportant) {
+            // Try to find a new path
+            this._pathfind()
+            // If no path can be found
+            if (!this.path) {
+              // Freak out and move randomly
+              const neighbours = [
+                new Vector2(0, -1),
+                new Vector2(0, 1),
+                new Vector2(-1, 0),
+                new Vector2(1, 0)
+              ]
+                .map(offset => offset.add(this._currentBlock))
+                .filter(this._canStepOnBlock.bind(this))
+              if (neighbours.length) {
+                this._setNextBlock(neighbours[Math.random() * neighbours.length | 0])
+              } else {
+                console.warn('Stuck :(')
+              }
             }
+          } else {
+            // Give up goal
+            this.goal = null
           }
         }
       }

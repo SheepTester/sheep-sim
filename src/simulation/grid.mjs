@@ -99,4 +99,8 @@ export class Grid {
 
     return this
   }
+
+  static get GRID_SIZE () {
+    return GRID_SIZE
+  }
 }

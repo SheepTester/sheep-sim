@@ -48,7 +48,10 @@
       const canvas = new Canvas()
         .setWrapper(document.getElementById('canvas-wrapper'))
 
-      const grid = new Grid({ canvas })
+      const grid = new Grid({
+        canvas,
+        scroll: new Vector2(-5, -5).scale(Grid.GRID_SIZE)
+      })
 
       const sheepCount = 10
       const goals = new Array(sheepCount)
@@ -70,7 +73,18 @@
         sheep.setGoal(new Vector2(10, goals[i]))
         sheepList.push(sheep)
       }
-      console.log(sheepList)
+
+      /*
+      // walls
+      for (let i = -5; i <= 15; i++) {
+        grid.placeBlock(new Vector2(-5, i))
+        grid.placeBlock(new Vector2(i, -5))
+        grid.placeBlock(new Vector2(i, 15))
+        grid.placeBlock(new Vector2(16, i))
+        grid.placeBlock(new Vector2(5, i))
+      }
+      grid.removeBlock(new Vector2(5, 5))
+      */
 
       const simulator = new Simulator({ simulations: sheepList, simulateTime: 0.01 })
       const animator = new Animator({ renderers: [simulator, grid] })
