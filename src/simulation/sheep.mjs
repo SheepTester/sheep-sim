@@ -25,6 +25,14 @@ export class Sheep {
     return this
   }
 
+  wander ({ wander, shouldWander = null, start = false } = {}) {
+    this.wandering = {
+      wander,
+      shouldWander,
+      _timeSinceLast: start ? Infinity : 0
+    }
+  }
+
   _pathfind () {
     if (!this.goal) return
     this.path = pathfind({
@@ -124,6 +132,14 @@ export class Sheep {
             .clone()
             .sub(this._currentBlock)
             .scale(this._nextBlockProgress))
+      }
+    }
+    if (!this.goal && this.wandering) {
+      this.wandering._timeSinceLast += time
+      const { wander, shouldWander } = this.wandering
+      if (!shouldWander || shouldWander(this.wandering._timeSinceLast)) {
+        this.wandering._timeSinceLast = 0
+        this.setGoal(wander(this), false)
       }
     }
     return this

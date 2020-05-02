@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Crowd</title>
-    <meta name="description" content="Crowd."/>
+    <title>Infection</title>
+    <meta name="description" content="Infection."/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <link href="https://fonts.googleapis.com/css2?family=Manrope&display=swap" rel="stylesheet">
@@ -50,8 +50,17 @@
 
       const grid = new Grid({
         canvas,
-        scroll: new Vector2(-5, -5).scale(Grid.GRID_SIZE)
+        scroll: new Vector2(-1, -1).scale(Grid.GRID_SIZE)
       })
+
+      // walls
+      const boundSize = 15
+      for (let i = -1; i <= boundSize; i++) {
+        grid.placeBlock(new Vector2(-1, i))
+        grid.placeBlock(new Vector2(i, -1))
+        grid.placeBlock(new Vector2(i, boundSize))
+        grid.placeBlock(new Vector2(boundSize, i))
+      }
 
       const sheepCount = 10
       const goals = new Array(sheepCount)
@@ -63,28 +72,24 @@
         ]
       }
       const sheepList = []
+      const wanderer = {
+        wander: sheep => {
+          sheep.speed = Math.random() * 3 + 1
+          return new Vector2(Math.random(), Math.random())
+            .scale(boundSize)
+            .map(Math.floor)
+        },
+        shouldWander: timeSinceLast => timeSinceLast > 1,
+        start: true
+      }
       for (let i = 0; i < sheepCount; i++) {
         const sheep = new Sheep({
-          position: new Vector2(0, i),
-          speed: Math.random() * 3 + 3
-          // speed: 5
+          position: new Vector2(0, i)
         })
         grid.addSheep(sheep)
-        sheep.setGoal(new Vector2(10, goals[i]))
+        sheep.wander(wanderer)
         sheepList.push(sheep)
       }
-
-      /*
-      // walls
-      for (let i = -5; i <= 15; i++) {
-        grid.placeBlock(new Vector2(-5, i))
-        grid.placeBlock(new Vector2(i, -5))
-        grid.placeBlock(new Vector2(i, 15))
-        grid.placeBlock(new Vector2(16, i))
-        grid.placeBlock(new Vector2(5, i))
-      }
-      grid.removeBlock(new Vector2(5, 5))
-      */
 
       const simulator = new Simulator({ simulations: sheepList, simulateTime: 0.01 })
       const animator = new Animator({ renderers: [simulator, grid] })
