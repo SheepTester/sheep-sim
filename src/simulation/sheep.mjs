@@ -25,6 +25,7 @@ export class Sheep {
   }
 
   _pathfind () {
+    if (!this.goal) return
     this.path = pathfind({
       grid: this.grid,
       start: this._nextBlock || this.position,
@@ -39,16 +40,47 @@ export class Sheep {
     return !block || block === this
   }
 
+  _setNextBlock (nextBlock) {
+    // Sets next block
+    this._nextBlock = nextBlock
+    this._nextBlockProgress = 0
+    this.grid.placeBlock(nextBlock, this)
+  }
+
   _setNextBlockIfNeeded () {
-    if (!this._nextBlock && this.path) {
-      if (this.path[0] && this._canStepOnBlock(this.path[0])) {
-        // Sets next block
-        const nextBlock = this.path.shift()
-        this._nextBlock = nextBlock
-        this._nextBlockProgress = 0
-        this.grid.placeBlock(nextBlock, this)
+    if (!this._nextBlock) {
+      if (this.path && this.path[0]) {
+        if (this._canStepOnBlock(this.path[0])) {
+          this._setNextBlock(this.path.shift())
+        } else {
+          // Try to find a new path
+          this._pathfind()
+        }
       } else {
-        this.path = null
+        if (this.path) {
+          this.path = null
+        }
+        if (this.goal) {
+          // Try to find a new path
+          this._pathfind()
+          // If no path can be found
+          if (!this.path) {
+            // Freak out and move randomly
+            const neighbours = [
+              new Vector2(0, -1),
+              new Vector2(0, 1),
+              new Vector2(-1, 0),
+              new Vector2(1, 0)
+            ]
+              .map(offset => offset.add(this._currentBlock))
+              .filter(this._canStepOnBlock.bind(this))
+            if (neighbours.length) {
+              this._setNextBlock(neighbours[Math.random() * neighbours | 0])
+            } else {
+              console.warn('Stuck :(')
+            }
+          }
+        }
       }
     }
   }
@@ -60,7 +92,7 @@ export class Sheep {
       if (this._nextBlock.equals(this._currentBlock)) {
         this._nextBlockProgress = 1
       }
-      // If walking into a solid block, reverse and recalculate
+      // If suddenly walking into a solid block, reverse and recalculate
       if (!this._canStepOnBlock(this._nextBlock)) {
         ;[this._currentBlock, this._nextBlock] = [this._nextBlock, this._currentBlock]
         this._nextBlockProgress = 1 - this._nextBlockProgress
@@ -79,6 +111,10 @@ export class Sheep {
         }
         this._currentBlock = this._nextBlock
         this._nextBlock = null
+        if (this._currentBlock.equals(this.goal)) {
+          console.log('Goal reached')
+          this.goal = null
+        }
 
         this._setNextBlockIfNeeded()
       } else {

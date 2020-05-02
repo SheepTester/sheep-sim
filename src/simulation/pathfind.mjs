@@ -86,7 +86,10 @@ export function pathfind ({ grid, start, ends, nonSolids = [] }) {
     .filter(isNonSolid)
     .map(getPosition)
 
-  if (endPositions.length === 0) return null
+  if (endPositions.length === 0) {
+    console.warn('No valid end positions')
+    return null
+  }
 
   return aStar(getPosition(start), {
     determineGoodness: position => {
