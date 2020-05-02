@@ -1,5 +1,7 @@
 import { Vector2 } from '../utils/vector2.mjs'
 
+const MAX_ATTEMPTS = 100
+
 // Uses A*: https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
 // Expects that the same position will have the same Vector2
 // `determineGoodness` is the heuristic function for guessing how close a position
@@ -17,7 +19,7 @@ export function aStar (start, { determineGoodness, isEnd, getValidNeighbours }) 
 
   const cameFrom = new Map()
 
-  while (agenda.size) {
+  while (agenda.size > 0 && agenda.size < MAX_ATTEMPTS) {
     // Get the position in agenda with lowest (best) goodness
     let current
     for (const position of agenda) {
