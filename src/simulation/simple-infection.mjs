@@ -33,6 +33,8 @@ export class SimpleInfection {
       this.sheep.infection = null
       if (Math.random() < this.deathChance) {
         this.sheep.die()
+      } else {
+        this.sheep.immune.push(SimpleInfection)
       }
     }
 
@@ -48,7 +50,7 @@ export class SimpleInfection {
   }
 
   infect (victim) {
-    if (!victim.infection) {
+    if (!victim.infection && !victim.immune.includes(SimpleInfection)) {
       const {
         infectionRadius,
         infectionChance,

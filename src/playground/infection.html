@@ -92,7 +92,13 @@
         sheepList.push(sheep)
       }
 
-      const infection = new SimpleInfection()
+      const infection = new SimpleInfection({
+        deathChance: 1,
+        duration: 10,
+        symptomaticTime: 0,
+        infectionChance: 0.1,
+        infectionRadius: 4
+      })
         .infect(sheepList[0])
 
       const simulator = new Simulator({ simulations: sheepList, simulateTime: 0.01 })

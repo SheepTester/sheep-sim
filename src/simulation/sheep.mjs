@@ -9,7 +9,9 @@ export class Sheep {
     this.position = position
     this._currentBlock = position.clone().map(Math.floor)
     this.speed = speed
+
     this.infection = null
+    this.immune = []
   }
 
   welcomeToGrid (grid) {
