@@ -4,7 +4,8 @@ import { pathfind } from './pathfind.mjs'
 export class Sheep {
   constructor ({
     position = new Vector2(),
-    speed = 5 // tiles/sec
+    speed = 5, // tiles/sec
+    grid = null
   } = {}) {
     this.position = position
     this._currentBlock = position.clone().map(Math.floor)
@@ -12,12 +13,15 @@ export class Sheep {
 
     this.infection = null
     this.immune = []
+
+    if (grid) grid.addSheep(this)
   }
 
   welcomeToGrid (grid) {
     if (!grid.getBlock(this._currentBlock)) {
       grid.placeBlock(this._currentBlock, this)
     }
+    return this
   }
 
   setGoal (goal, important = true) {
@@ -34,6 +38,7 @@ export class Sheep {
       shouldWander,
       _timeSinceLast: start ? Infinity : 0
     }
+    return this
   }
 
   die () {
@@ -45,6 +50,7 @@ export class Sheep {
     if (this._nextBlock && this.grid.getBlock(this._nextBlock) === this) {
       this.grid.removeBlock(this._nextBlock)
     }
+    return this
   }
 
   getSheepWithin (distance) {

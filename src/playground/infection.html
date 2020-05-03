@@ -84,12 +84,16 @@
         start: true
       }
       for (let i = 0; i < sheepCount; i++) {
-        const sheep = new Sheep({
-          position: new Vector2(0, i)
+        sheepList.push(new Sheep({
+          position: new Vector2(0, i),
+          grid
         })
-        grid.addSheep(sheep)
-        sheep.wander(wanderer)
-        sheepList.push(sheep)
+          .wander(wanderer))
+        sheepList.push(new Sheep({
+          position: new Vector2(10, i),
+          grid
+        })
+          .wander(wanderer))
       }
 
       const infection = new SimpleInfection({
